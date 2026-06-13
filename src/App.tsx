@@ -3,24 +3,41 @@ import * as Tone from "tone";
 
 export default function MusicGenerator() {
   const [isPlay, setIsPlay] = useState(false);
-      const now = Tone.now();
 
-  const notes = ["C1", "C3", "C1", "C4", "C3", "C2",  "C3", "C4",
-      "Ab2", "Ab1", "Ab2", "Ab3",  "G#2", "G#1", "G#2",  "G#3", "A2", "A1", "A2",
-        "A3", "A2", "A1", "A2", "A3", "G#3", "G#2", "G#1", "C#1"] 
+  const notes1 = 
+  ["C1", "C3", "C1", "C4", "C3", "C2",  "C3", "C4",
+      "C3", "C1", "C2", "C4", "C3", "C2", 
+          "Ab2", "Ab1", "Ab2", "Ab3",  "G#2", "G#1", "G#2",  "G#3", "A2", "A1", "A2",
+              "A3", "A2", "A1", "A2", "A3", "G#3", "G#2", "G#1", "C#1"]
+
+  const notes2 = [ "D4", "F3", "D4", "F3", "D3", "F3", "D3", "F3",
+                         "D4", "F3", "D4", "F3", "D3", "F3", "D3", "F3", "F2", "F1",
+                               "F2", "F3", "F2", "F1", "F2", "F3", "E2", "E1", "E2",
+                                    "E3", "D#2", "D#1", "D#2", "D#3", "C#2", "C#1", "C#2", "C#3", "C2", "C1", "C2", "C3", "C2", "C1"];
     
   const playSequence = async () => {
     setIsPlay(true);
     await Tone.start();
     const now = Tone.now();
 
-    const synth = new Tone.MonoSynth().toDestination();
+    const synth1 = new Tone.MonoSynth().toDestination();
 
-    notes.forEach((note, index) => {
-      synth.triggerAttackRelease(note, "16n", now + index * 0.25);
+      const synth2 = new Tone.FMSynth({
+        volume: 2,
+        modulationIndex: 10,
+        harmonicity: 3,
+        envelope: { attack: 0.03, decay: 0.2, sustain: 0.8, release: 0.8 },
+      }).toDestination();
+
+      notes1.forEach((note, index) => {
+        synth1.triggerAttackRelease(note, "16n", now + index * 0.22);
+      });
+
+    notes2.forEach((note, index) => {
+      synth2.triggerAttackRelease(note, "16n", now + index * 0.22);
     });
 
-    const totalTime = notes.length * 0.25 + 0.3;
+    const totalTime = Math.max(notes2.length, notes2.length) * 0.25 + 0.3;
 
     setTimeout(() => {
       setIsPlay(false);
